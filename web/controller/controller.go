@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"blockchain-database/web/service"
+	"github.com/lihongchaoxe/blockchain-database/tree/master/web/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
