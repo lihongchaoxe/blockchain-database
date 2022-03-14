@@ -1,0 +1,256 @@
+#i
+# Copyright IBM Corp All Rights Reserved
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+version: '2'
+
+services:
+
+  ca.org1.perinfo.com:
+    container_name: ca.org1.perinfo.com
+    extends:
+      file: base.yaml
+      service: ca-base
+    environment:
+      - FABRIC_CA_SERVER_CA_NAME=ca.org1.perinfo.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.perinfo.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/173247662c52e6aa984173cb987f401b4702f39f23c9f3a89455f1ff3b28f6c5_sk # 根据自己的文件名修改
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.perinfo.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/173247662c52e6aa984173cb987f401b4702f39f23c9f3a89455f1ff3b28f6c5_sk # 根据自己的文件名修改
+    ports:
+      - 6054:7054
+    command: sh -c 'fabric-ca-server start -b admin:perinfo68 -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org1.perinfo.com/ca/:/etc/hyperledger/fabric-ca-server-config
+
+  ca.org2.perinfo.com:
+    container_name: ca.org2.perinfo.com
+    extends:
+      file: base.yaml
+      service: ca-base
+    environment:
+      - FABRIC_CA_SERVER_CA_NAME=ca.org2.perinfo.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.perinfo.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/634b34e0681c99aa4e2d61e437a38086a36fad7620521efa7160e44fe667d06f_sk # 根据自己的文件名修改
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.perinfo.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/634b34e0681c99aa4e2d61e437a38086a36fad7620521efa7160e44fe667d06f_sk # 根据自己的文件名修改
+    ports:
+      - 8054:7054
+    command: sh -c 'fabric-ca-server start -b admin:perinfo68 -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org2.perinfo.com/ca/:/etc/hyperledger/fabric-ca-server-config
+
+  ca.org3.perinfo.com:
+    container_name: ca.org3.perinfo.com
+    extends:
+      file: base.yaml
+      service: ca-base
+    environment:
+      - FABRIC_CA_SERVER_CA_NAME=ca.org3.perinfo.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org3.perinfo.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/4d55fad6580156fb9f25437e14f52a04f8f530e54bcaffa5983fa087e84dd4e7_sk # 根据自己的文件名修改
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org3.perinfo.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/4d55fad6580156fb9f25437e14f52a04f8f530e54bcaffa5983fa087e84dd4e7_sk # 根据自己的文件名修改
+    ports:
+      - 9054:7054
+    command: sh -c 'fabric-ca-server start -b admin:perinfo68 -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org3.perinfo.com/ca/:/etc/hyperledger/fabric-ca-server-config
+
+  ca.org4.perinfo.com:
+    container_name: ca.org4.perinfo.com
+    extends:
+      file: base.yaml
+      service: ca-base
+    environment:
+      - FABRIC_CA_SERVER_CA_NAME=ca.org4.perinfo.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org4.perinfo.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/e226df8101d4b2125fc051f8d4f8a07929e1a8ac2a8a6942c1fd8ab8696916c2_sk # 根据自己的文件名修改
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org4.perinfo.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/e226df8101d4b2125fc051f8d4f8a07929e1a8ac2a8a6942c1fd8ab8696916c2_sk # 根据自己的文件名修改
+    ports:
+      - 10054:7054
+    command: sh -c 'fabric-ca-server start -b admin:perinfo68 -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org4.perinfo.com/ca/:/etc/hyperledger/fabric-ca-server-config
+
+
+  orderer.perinfo.com:
+    container_name: orderer.perinfo.com
+    extends:
+      file: base.yaml
+      service: orderer-base
+    volumes:
+      - ./crypto-config/ordererOrganizations/perinfo.com/orderers/orderer.perinfo.com/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/perinfo.com/orderers/orderer.perinfo.com/tls/:/var/hyperledger/orderer/tls
+    ports:
+      - 7050:7050
+
+
+  couchdb1: # 实际生成环境中应该每个peer一个couchdb，因为这里只作演示测试使用，因此多个peer共用一个couchdb
+    container_name: couchdb1
+    extends:
+      file: base.yaml
+      service: couchdb-base1
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "5984:5984"
+
+  couchdb2: # 实际生成环境中应该每个peer一个couchdb，因为这里只作演示测试使用，因此多个peer共用一个couchdb
+    container_name: couchdb2
+    extends:
+      file: base.yaml
+      service: couchdb-base2
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "6984:5984"
+
+  couchdb3: # 实际生成环境中应该每个peer一个couchdb，因为这里只作演示测试使用，因此多个peer共用一个couchdb
+    container_name: couchdb3
+    extends:
+      file: base.yaml
+      service: couchdb-base3
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "7984:5984"
+
+  couchdb4: # 实际生成环境中应该每个peer一个couchdb，因为这里只作演示测试使用，因此多个peer共用一个couchdb
+    container_name: couchdb4
+    extends:
+      file: base.yaml
+      service: couchdb-base4
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "8984:5984"
+
+
+  peer0.org1.perinfo.com:
+    container_name: peer0.org1.perinfo.com
+    extends:
+      file: base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org1.perinfo.com
+      - CORE_PEER_ADDRESS=peer0.org1.perinfo.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org1.perinfo.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.perinfo.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.perinfo.com:7051
+    volumes:
+      - ./crypto-config/peerOrganizations/org1.perinfo.com/peers/peer0.org1.perinfo.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org1.perinfo.com/peers/peer0.org1.perinfo.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 7051:7051
+    depends_on:
+      - couchdb1
+
+  peer0.org2.perinfo.com:
+    container_name: peer0.org2.perinfo.com
+    extends:
+      file: base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org2.perinfo.com
+      - CORE_PEER_ADDRESS=peer0.org2.perinfo.com:8051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org2.perinfo.com:8052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb2:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.perinfo.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.perinfo.com:7051
+    volumes:
+      - ./crypto-config/peerOrganizations/org2.perinfo.com/peers/peer0.org2.perinfo.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org2.perinfo.com/peers/peer0.org2.perinfo.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 8051:8051
+    depends_on:
+      - couchdb2
+
+  peer0.org3.perinfo.com:
+    container_name: peer0.org3.perinfo.com
+    extends:
+      file: base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org3.perinfo.com
+      - CORE_PEER_ADDRESS=peer0.org3.perinfo.com:9051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org3.perinfo.com:9052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_LOCALMSPID=Org3MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb3:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org3.perinfo.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org3.perinfo.com:7051
+    volumes:
+      - ./crypto-config/peerOrganizations/org3.perinfo.com/peers/peer0.org3.perinfo.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org3.perinfo.com/peers/peer0.org3.perinfo.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 9051:9051
+    depends_on:
+      - couchdb3
+
+  peer0.org4.perinfo.com:
+    container_name: peer0.org4.perinfo.com
+    extends:
+      file: base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org4.perinfo.com
+      - CORE_PEER_ADDRESS=peer0.org4.perinfo.com:10051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org4.perinfo.com:10052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
+      - CORE_PEER_LOCALMSPID=Org4MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb4:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org4.perinfo.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org4.perinfo.com:7051
+    volumes:
+      - ./crypto-config/peerOrganizations/org4.perinfo.com/peers/peer0.org4.perinfo.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org4.perinfo.com/peers/peer0.org4.perinfo.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 10051:10051
+    depends_on:
+      - couchdb4
+
+
