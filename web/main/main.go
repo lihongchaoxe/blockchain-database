@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/lihongchaoxe/blockchain-database/tree/master/web/controller"
-	"github.com/lihongchaoxe/blockchain-database/tree/master/web/info"
-	"github.com/lihongchaoxe/blockchain-database/tree/master/web/sdkInit"
-	"github.com/lihongchaoxe/blockchain-database/tree/master/web/service"
+	"github.com/lihongchaoxe/blockchain-database/web/controller"
+	"github.com/lihongchaoxe/blockchain-database/web/info"
+	"github.com/lihongchaoxe/blockchain-database/web/sdkInit"
+	"github.com/lihongchaoxe/blockchain-database/web/service"
 	"github.com/gin-gonic/gin"
 	"github.com/hyperledger/fabric-sdk-go/pkg/fabsdk"
 )

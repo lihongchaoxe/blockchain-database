@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/lihongchaoxe/blockchain-database/tree/master/web/info"
+	"github.com/lihongchaoxe/blockchain-database/web/info"
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/channel"
 	"github.com/pkg/errors"
 )

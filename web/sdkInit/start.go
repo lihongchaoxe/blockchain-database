@@ -2,7 +2,7 @@ package sdkInit
 
 import (
 	"fmt"
-	"github.com/lihongchaoxe/blockchain-database/tree/master/web/info"
+	"github.com/lihongchaoxe/blockchain-database/web/info"
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/channel"
 	mspclient "github.com/hyperledger/fabric-sdk-go/pkg/client/msp"
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/resmgmt"
