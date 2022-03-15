@@ -5,7 +5,6 @@ import (
 	"github.com/lihongchaoxe/blockchain-database/web/controller"
 	"github.com/lihongchaoxe/blockchain-database/web/info"
 	"github.com/lihongchaoxe/blockchain-database/web/sdkInit"
-	"github.com/lihongchaoxe/blockchain-database/web/service"
 	"github.com/gin-gonic/gin"
 	"github.com/hyperledger/fabric-sdk-go/pkg/fabsdk"
 )
@@ -20,12 +19,20 @@ func org1Start(sdk *fabsdk.FabricSDK)  {
 		return
 	}
 	if !info.Initialized {
-		//Org1加入通道
+		//Org2加入通道
+             err = sdkInit.PeerJoinChannel(sdk, info.Org2Name)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+        //Org1加入通道
 		err = sdkInit.PeerJoinChannel(sdk, info.Org1Name)
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
+             
 		//安装链码
 		err = sdkInit.InstallCC()
 		if err != nil {

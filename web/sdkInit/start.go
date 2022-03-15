@@ -106,18 +106,7 @@ func PeerJoinChannel(sdk *fabsdk.FabricSDK, orgName string) error {
 	if err != nil {
 		return fmt.Errorf("%v", err)
 	}
-      reqPeers := resmgmt.WithTargetEndpoints("peer0.org2.cfginfo.com")
-      err = info.OrgResMgmt.JoinChannel(info.ChannelID, reqPeers, resmgmt.WithOrdererEndpoint(info.OrdererOrgName))
-      if err != nil {
-	      return fmt.Errorf("peer0.org2.cfginfo.com 加入通道失败: %v", err)
-        }
-      fmt.Println("peer0.org2.cfginfo.com 已成功加入通道...")
-      reqPeers1 := resmgmt.WithTargetEndpoints("peer1.org2.cfginfo.com")
-      err = info.OrgResMgmt.JoinChannel(info.ChannelID, reqPeers, resmgmt.WithOrdererEndpoint(info.OrdererOrgName))
-      if err != nil {
-	      return fmt.Errorf("peer1.org2.cfginfo.com 加入通道失败: %v", err)
-        }
-      fmt.Println("peer1.org2.cfginfo.com 已成功加入通道...")
+
 	err = orgResMgmt.JoinChannel(info.ChannelID,
 		resmgmt.WithRetry(retry.DefaultResMgmtOpts),
 		resmgmt.WithOrdererEndpoint(info.OrdererID))
@@ -147,11 +136,7 @@ func InstallCC() (error) {
 		Version:info.ChaincodeVersion,
 		Package: ccPkg,
 	}
-      reqPeers := resmgmt.WithTargetEndpoints("peer0.org2.cfginfo.com")
-      _, err = info.OrgResMgmt.InstallCC(installCCReq, reqPeers)
-      if err != nil {
-		return fmt.Errorf("安装链码失败: %v", err)
-	}
+
 	_, err = info.OrgResMgmt.InstallCC(
 		installCCReq,
 		resmgmt.WithRetry(retry.DefaultResMgmtOpts))
